@@ -106,10 +106,11 @@ namespace :deploy do
   task :webpack_compile do
     on roles(:web) do
       within release_path do
-        with rails_env: fetch(:rails_env) do
+        with rails_env: fetch(:rails_env), NODE_ENV: 'production' do
           execute :rake, 'webpacker:compile'
         end
       end
     end
   end
+
 end
