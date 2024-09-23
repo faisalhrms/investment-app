@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" class="ie8 no-js"> <![endif]--><!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]--><!--[if !IE]><!-->
+<html lang="zxx">
+<head>
+  <title>InvestmentApp</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "css/animate" %>
+  <%= stylesheet_link_tag "css/bootstrap.min" %>
+  <%= stylesheet_link_tag "css/fonts" %>
+  <%= stylesheet_link_tag "css/flaticon" %>
+  <%= stylesheet_link_tag "css/font-awesome" %>
+  <%= stylesheet_link_tag "css/owl.carousel" %>
+  <%= stylesheet_link_tag "css/owl.theme" %>
+  <%= stylesheet_link_tag "css/datatables" %>
+  <%= stylesheet_link_tag "css/dropify.min" %>
+  <%= stylesheet_link_tag "css/reset" %>
+  <%= stylesheet_link_tag "css/nice-select" %>
+  <%= stylesheet_link_tag "css/magnific-popup" %>
+  <%= stylesheet_link_tag "css/style" %>
+  <%= stylesheet_link_tag "css/responsive" %>
+  <%= stylesheet_link_tag "css/toastr.min"%>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk"
+    crossorigin="anonymous"
+    />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<% if request.path == '/login' %>
+  <script id="current-user" type="application/json">
+    {}
+  </script>
+
+<% elsif request.path == '/' || @current_user.blank? %>
+  <div id="root"></div>
+
+  <script id="current-user" type="application/json">
+    {}
+  </script>
+
+<% else %>
+  <div id="root"></div>
+  <div id="preloader">
+    <div id="status">
+      <img src="<%= asset_path 'loader.gif' %>" id="preloader_image" alt="loader">
+    </div>
+  </div>
+
+  <div class="cursor"></div>
+  <a href="javascript:" id="return-to-top">
+    <i class="fas fa-angle-double-up"></i>
+  </a>
+  <script id="current-user" type="application/json">
+    <%= {
+          current_user: @current_user.as_json(include: { role: { include: :permissions } }),
+          # avatar_url: @current_user.avatar.url,
+          menus: Menu.where(slug: %w[
+            Authentication dashboard users menus roles activity_streams
+          ]).index_by(&:id).transform_values { |menu| { id: menu.id, slug: menu.slug } }
+        }.to_json.html_safe %>
+  </script>
+<% end %>
+
+
+<%= yield %>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/jquery-3.3.1.min.js', 'data-turbo-track': 'reload' %>
+<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+
+<%= javascript_include_tag 'js/bootstrap.min.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/modernizr.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/jquery.menu-aim.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/plugin.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/jquery.countTo.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/dropify.min.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/jquery.inview.min.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/jquery.magnific-popup.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/owl.carousel.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/datatables.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/jquery.nice-select.min.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/calculator.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'js/custom.js', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'toastr', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'js/sweetalert', 'data-turbolinks-track': 'reload' %>
+
+</body>
+<% if alert.present? %>
+  <script>
+      $(document).ready(function () {
+          Swal.fire({
+              icon: 'warning',
+              title: 'Oops...',
+              text: '<%= alert %>'
+          })
+      });
+      <% flash[:alert] = nil %>
+  </script>
+<% end %>
+<% if notice.present? %>
+  <script>
+      $(document).ready(function () {
+          toastr.options.timeout = 1000;
+          toastr.success('<%= notice %>');
+      });
+      <% flash[:notice] = nil %>
+  </script>
+<% end %>
+
+</html>
