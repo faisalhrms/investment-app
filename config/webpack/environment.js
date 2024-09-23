@@ -1,3 +1,6 @@
-const { environment } = require('@rails/webpacker')
+const { environment } = require('@rails/webpacker');
+const fileLoader = require('./loaders/file');
 
-module.exports = environment
+environment.loaders.prepend('file', fileLoader);
+
+module.exports = environment;
