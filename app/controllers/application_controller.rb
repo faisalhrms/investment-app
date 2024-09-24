@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
     return @current_user if defined?(@current_user)
     if session[:user_id].present?
       user = User.find_by(id: session[:user_id])
-      if user && ActiveSupport::SecurityUtils.secure_compare(user.authentication_token, cookies["auth_id"])
+      if user && ActiveSupport::SecurityUtils.secure_compare(user.authentication_token, session["auth_id"])
         @current_user = user
       end
     end

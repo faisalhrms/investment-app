@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:password])
       if user.is_active == true
         user.update(authentication_token: SecureRandom.urlsafe_base64)
-        cookies[:auth_id] = user.authentication_token
+        session[:auth_id] = user.authentication_token
         session[:user_id] = user.id
 
         if user.role.present?
