@@ -16,6 +16,7 @@ import CartPage from "../components/CartPage";
 import CheckoutPage from "../components/CheckoutPage";
 import ChangePassword from "../components/ChangePassword";
 import ApprovalRequest from "../components/ApprovalRequest";
+import Referrals from "../components/Referrals";
 
 const App = () => {
     const location = useLocation();
@@ -26,7 +27,8 @@ const App = () => {
         || location.pathname.startsWith('/packages')
         || location.pathname.startsWith('/user_profile')
         || location.pathname.startsWith('/approval_request')
-        || location.pathname.startsWith('/activity_stream');
+        || location.pathname.startsWith('/activity_stream')
+        || location.pathname.startsWith('/referrals');
     const [currentUser, setCurrentUser] = useState(null);
     const [avatarUrl, setAvatarUrl] = useState(null);
 
@@ -59,6 +61,7 @@ const App = () => {
                         <Route path="/register" element={<Register />} />
                         <Route path="/dashboard" element={<Dashboard currentUser={currentUser} avatarUrl={avatarUrl} />} />
                         <Route path="/user" element={<User currentUser={currentUser} avatarUrl={avatarUrl}/>} />
+                        <Route path="/referrals" element={<Referrals currentUser={currentUser} avatarUrl={avatarUrl}/>} />
                         <Route path="/role" element={<Role currentUser={currentUser} avatarUrl={avatarUrl}/>} />
                         <Route path="/packages" element={<Packages currentUser={currentUser} avatarUrl={avatarUrl}/>} />
                         <Route path="/cart" element={<CartPage />} />

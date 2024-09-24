@@ -10,28 +10,28 @@ class PackagesController < ApplicationController
     end
   end
 
-  def active_plan
-    # Find the last plan transaction for the current user where the associated package has status 'active'
-    @active_plan = PlanTransaction.joins(:package)
-                                  .where(user: current_user, packages: { status: 'active' })
-                                  .last
+    def active_plan
+      # Find the last plan transaction for the current user where the associated package has status 'active'
+      @active_plan = PlanTransaction.joins(:package)
+                                    .where(user: current_user)
+                                    .last
 
-    if @active_plan
-      # Include both the package and plan transaction details in the response
-      render json: {
-        plan: @active_plan.package,
-        plan_transaction: {
-          id: @active_plan.id,
-          deposit_amount: @active_plan.deposit_amount,
-          status: @active_plan.status,
-          created_at: @active_plan.created_at,
-          updated_at: @active_plan.updated_at
-        }
-      }, status: :ok
-    else
-      render json: { message: 'No active plan found' }, status: :ok
+      if @active_plan
+        # Include both the package and plan transaction details in the response
+        render json: {
+          plan: @active_plan.package,
+          plan_transaction: {
+            id: @active_plan.id,
+            deposit_amount: @active_plan.deposit_amount,
+            status: @active_plan.status,
+            created_at: @active_plan.created_at,
+            updated_at: @active_plan.updated_at
+          }
+        }, status: :ok
+      else
+        render json: { message: 'No active plan found' }, status: :ok
+      end
     end
-  end
 
   def pending_requests
     @pending_requests = PlanTransaction.joins(:package, :user)

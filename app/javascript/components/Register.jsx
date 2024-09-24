@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';  // Import useSearchParams
 import OwlCarousel from 'react-owl-carousel';
 import partner1 from '../images/partner1.png';
 import partner2 from '../images/partner2.png';
 import partner3 from '../images/partner3.png';
 import partner4 from '../images/partner4.png';
 import backgroundImage from '../images/login.jpg';
-import toast, { Toaster } from 'react-hot-toast';  
+import toast, { Toaster } from 'react-hot-toast';
 
 const Register = () => {
     const navigate = useNavigate();  // Initialize useNavigate hook
+    const [searchParams] = useSearchParams(); // Get query parameters
 
     // State to manage form inputs
     const [formData, setFormData] = useState({
@@ -21,6 +22,17 @@ const Register = () => {
         confirmPassword: '',
         email: ''
     });
+
+    // Extract referral code from the URL and set it in the form data when the component loads
+    useEffect(() => {
+        const referralCode = searchParams.get('ref');
+        if (referralCode) {
+            setFormData((prevData) => ({
+                ...prevData,
+                referralId: referralCode,
+            }));
+        }
+    }, [searchParams]);
 
     // Function to handle input changes
     const handleChange = (e) => {
@@ -174,7 +186,7 @@ const Register = () => {
                                         </label>
                                     </div>
                                     <div className="about_btn login_btn register_btn float_left">
-                                        <a  onClick={handleSubmit} l>Submit</a>
+                                        <a  onClick={handleSubmit}>Submit</a>
                                     </div>
                                 </form>
                             </div>

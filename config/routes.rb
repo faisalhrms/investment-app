@@ -23,12 +23,14 @@ Rails.application.routes.draw do
   get 'user' => 'users#index'
   get 'users' => 'users#users'
   get 'register' => 'users#register'
+  get 'referrals' => 'users#referrals'
   post 'new_user' => 'users#create'
   post 'update_user/:id' => 'users#update'
   post 'delete_user/:id' => 'users#destroy'
   post 'change_password_user' => 'users#change_password'
   get 'user_profile' => 'users#user_profile'
   post '/update_preference', to: 'users#update_preference'
+  get 'users/:id/referral_data', to: 'users#referral_data'
 
   ##### MENUS #####
   get 'menu' => 'menus#index'

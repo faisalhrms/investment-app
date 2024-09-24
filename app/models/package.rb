@@ -6,5 +6,5 @@ class Package < ApplicationRecord
   has_many :plan_transactions
 
   has_attached_file :attachment
-  validates_attachment_content_type :attachment, content_type: /\Aimage\/.*\z/
+  validates_attachment_content_type :attachment, content_type: /\Aimage\/.*\z/, if: -> { attachment.present? }
 end

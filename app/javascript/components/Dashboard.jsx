@@ -36,17 +36,22 @@ const Dashboard = ({ currentUser }) => {
     const fetchActivePlan = async () => {
         try {
             const response = await axios.get(`/packages/active_plan`);
-            if (response.data && response.data.plan) {
-                setActivePlan(response.data.plan);  // Set active plan
+
+            // Check if the plan and the transaction are present
+            if (response.data && response.data.plan && response.data.plan_transaction) {
+                setActivePlan(response.data.plan);  // Set active plan regardless of status
                 setPlanTransaction(response.data.plan_transaction);  // Set plan transaction
             } else {
-                console.log(response.data.message); // Log if no active plan found
-                setActivePlan(null); // Handle no active plan
+                console.log(response.data.message);
+                setActivePlan(null);
+                setPlanTransaction(null);
             }
         } catch (error) {
             console.error('Error fetching active plan:', error);
         }
     };
+
+
 
     const handleCancelClick = (plan) => {
         setSelectedPlan(plan);
@@ -77,7 +82,7 @@ const Dashboard = ({ currentUser }) => {
     };
 
     const handleCopyReferralLink = () => {
-        const referralLink = `${window.location.origin}/register?ref=${currentUser.referral_code}`;
+        const referralLink = `${window.location.origin}/register?ref=${currentUser.referral_id}`;
         navigator.clipboard.writeText(referralLink);
         alert('Referral link copied!');
     };
@@ -330,7 +335,7 @@ const Dashboard = ({ currentUser }) => {
                                                 <ul>
                                                     <li>
                                                         {activePlan && activePlan.id === plan.id ? (
-                                                            activePlan && activePlan.status === 'active' ? (
+                                                            planTransaction && planTransaction.status === 'active' ? (
                                                                 <a onClick={() => handleCancelClick(plan)} style={{ color: 'white' }}>Cancel</a>
                                                             ) : (
                                                                 <a style={{ color: 'gray', pointerEvents: 'none', cursor: 'default' }}>
@@ -340,10 +345,10 @@ const Dashboard = ({ currentUser }) => {
                                                         ) : (
                                                             <a onClick={() => handleBuyClick(plan)}>Buy</a>
                                                         )}
-
                                                     </li>
                                                 </ul>
                                             </div>
+
                                             <div className="investment_border_wrapper"></div>
 
                                             {/* Mark the active plan */}

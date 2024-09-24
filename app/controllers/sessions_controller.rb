@@ -73,7 +73,7 @@ class SessionsController < ApplicationController
       user.login_histories.where(:is_active => true).update(:is_active => false)
       user.update(:authentication_token => SecureRandom.urlsafe_base64)
       session[:user_id] = nil
-      cookies[:auth_id] = nil
+      session[:auth_id] = nil
       flash[:notice] = "You have been logged out"
       redirect_to root_path
     else

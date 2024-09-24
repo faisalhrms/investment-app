@@ -91,7 +91,7 @@
 	.slider_index3_wrapper .carousel-inner .carousel-indicators{
 		margin-left:0;
 	}
-
+	
 }
 @media (max-width: 1550px){
 	.cp_logo_wrapper{
@@ -632,7 +632,7 @@
 
 
 @media(min-width: 768px) and (max-width: 992px){
-
+	
 }
 @media (max-width: 991px){
 	.top_header_right_wrapper, .slider_main_img_wrapper, .banner_img_top{
@@ -907,7 +907,7 @@
 		width: 25%;
 	}
 	.crm_customer_table_main_wrapper .table .width_table1{
-		width:250px !important;
+		width:250px !important; 
 	}
 	.crm_customer_table_main_wrapper table.dataTable thead .sorting, .crm_customer_table_main_wrapper table.dataTable thead .sorting_asc{
 		background-image:none;
@@ -1085,7 +1085,7 @@
 @media (max-width: 767px){
 	.calculator .chart-label {
 		left: 102%;
-	}
+	}	
 	.zero_commisition{
 		width:100%;
 	}
@@ -1264,7 +1264,7 @@
 @media (max-width: 650px){
 	.carousel-nevigation{
 		left:60px;
-	}
+	}	
 	.calculator .graph-area{
 		width:430px;
 	}

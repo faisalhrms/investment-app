@@ -8,6 +8,36 @@ class UsersController < ApplicationController
     create_activity("View Users Index Page", "User", 0)
   end
 
+  def referral_data
+
+    user = User.find(params[:id])
+
+    # Your logic to calculate referral data
+    active_referrals = User.where(referred_by: user.id, is_active: true).count
+    inactive_referrals = User.where(referred_by: user.id, is_active: false).count
+    total_referral_amount = PlanTransaction
+                              .where(user_id: User.where(referred_by: user.id).pluck(:id))
+                              .sum("CAST(regexp_replace(deposit_amount, '[^0-9.-]', '', 'g') AS DECIMAL)")
+
+
+    first_level_referrals = User.where(referred_by: user.id).map do |referral|
+      {
+        username: referral.user_name,
+        first_name: referral.full_name.split(' ').first,
+        email: referral.email,
+        is_active: referral.is_active
+      }
+    end
+
+    # Render the referral data as JSON
+    render json: {
+      activeReferrals: active_referrals,
+      inactiveReferrals: inactive_referrals,
+      totalReferralAmount: total_referral_amount,
+      firstLevelReferrals: first_level_referrals
+    }
+  end
+
   def users
     per_page = (params[:per_page] || 10).to_i
     page = (params[:page] || 1).to_i
@@ -46,6 +76,7 @@ class UsersController < ApplicationController
 
 
   def create
+    referring_user = User.find_by(referral_id: params[:referralId])
     user = User.new
     user.full_name = "#{params[:firstName]} #{params[:lastName]}".strip
     user.password = params[:password]
@@ -53,14 +84,17 @@ class UsersController < ApplicationController
     user.user_name = params[:username]
     user.role_id = Role.last.id
     user.is_active = true
+    user.referral_id = generate_unique_referral_code
+    user.referred_by = referring_user.id if referring_user.present?
     if user.save
-      ActivityStream.create_activity_stream("Create #{user.email} New User", "User", user.id,  user , "create")
+      ActivityStream.create_activity_stream("Create #{user.email} New User", "User", user.id, user, "create")
       render json: { message: "User Created Successfully", success: true }
     else
       error_message = user.errors.full_messages.first || "Something Went Wrong"
       render json: { message: error_message, success: false }
     end
   end
+
 
   def update
     params[:is_active] = false if params[:is_active].nil?
@@ -119,6 +153,14 @@ class UsersController < ApplicationController
   end
   def valid_password?(password)
     password.match?(/\A(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\d]).{8,}\z/)
+  end
+
+
+  def generate_unique_referral_code
+    loop do
+      code = SecureRandom.hex(4)
+      break code unless User.exists?(referral_id: code)
+    end
   end
   def set_module_name
     @module_name = "Authentication"

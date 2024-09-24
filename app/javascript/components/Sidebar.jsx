@@ -1,14 +1,29 @@
-import React from 'react';
-import {Link} from "react-router-dom";
-
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
+import axios from 'axios';
 const Sidebar = () => {
+    const [approvalCount, setApprovalCount] = useState(0);
+
+    useEffect(() => {
+        // Fetch the number of pending approval requests
+        const fetchApprovalCount = async () => {
+            try {
+                const response = await axios.get('/packages/pending_requests'); // Assuming this endpoint returns the count of pending requests
+                setApprovalCount(response.data.length);
+            } catch (error) {
+                console.error('Error fetching approval request count:', error);
+            }
+        };
+
+        fetchApprovalCount();
+    }, []);
     return (
         <div className="l-sidebar">
             <div className="l-sidebar__content">
                 <nav className="c-menu js-menu" id="mynavi">
                     <ul className="u-list crm_drop_second_ul">
                         <li className="crm_navi_icon">
-                            <div className="c-menu__item__inner"><a href="my_account.html"><i
+                            <div className="c-menu__item__inner"><a><i
                                 className="flaticon-four-grid-layout-design-interface-symbol"></i></a>
                                 <ul className="crm_hover_menu">
                                     <li><Link to="/dashboard"><i className="fas fa-circle"></i> my profile</Link>
@@ -19,8 +34,8 @@ const Sidebar = () => {
                             </div>
                         </li>
                         <li className="c-menu__item is-active has-sub crm_navi_icon_cont">
-                            <a href="my_account.html">
-                                <div className="c-menu-item__title"><span>my account</span><i className="no_badge">5</i>
+                            <a>
+                                <div className="c-menu-item__title"><span>my account</span>
                                 </div>
                             </a>
                             <ul>
@@ -35,7 +50,7 @@ const Sidebar = () => {
                     </ul>
                     <ul className="u-list crm_drop_second_ul">
                         <li className="crm_navi_icon">
-                            <div className="c-menu__item__inner"><a href="make_deposit.html"><i
+                            <div className="c-menu__item__inner"><a><i
                                 className="flaticon-movie-tickets"></i></a>
                                 <ul className="crm_hover_menu">
                                     <li>
@@ -58,8 +73,8 @@ const Sidebar = () => {
                             </div>
                         </li>
                         <li className="c-menu__item is-active has-sub crm_navi_icon_cont">
-                            <a href="make_deposit.html">
-                                <div className="c-menu-item__title"><span>finance</span><i className="no_badge">5</i>
+                            <a>
+                                <div className="c-menu-item__title"><span>finance</span>
                                 </div>
                             </a>
                             <ul>
@@ -89,41 +104,33 @@ const Sidebar = () => {
                         </li>
                         <li className="c-menu__item crm_navi_icon_cont">
                             <Link to="/approval_request">
-                                <div className="c-menu-item__title">Approval Requests</div>
+                                <div className="c-menu-item__title">
+                                    Approval Requests
+                                    {approvalCount > 0 && (
+                                        <span style={{marginLeft: '27px'}} className="no_badge">{approvalCount}</span>
+                                    )}
+                                </div>
                             </Link>
                         </li>
                     </ul>
                     <ul className="u-list crm_drop_second_ul">
                         <li className="crm_navi_icon">
-                            <div className="c-menu__item__inner"><a href="referrals.html"><i
-                                className="flaticon-settings"></i></a>
+                            <div className="c-menu__item__inner"><a><i
+                                className="flaticon-help"></i></a>
                                 <ul className="crm_hover_menu">
-                                    <li><a href="referrals.html"><i className="fa fa-circle"></i> my referrals </a>
-                                    </li>
                                     <li>
-                                        <a href="banners.html"> <i className="fa fa-circle"></i>promotionals banners</a>
-                                    </li>
-                                    <li>
-                                        <a href="referral_earnings.html"> <i className="fa fa-circle"></i>referral
-                                            earnings</a>
+                                        <Link to="/referrals"><i className="fas fa-circle"></i> my referrals</Link>
                                     </li>
                                 </ul>
                             </div>
                         </li>
                         <li className="c-menu__item is-active has-sub crm_navi_icon_cont">
                             <a href="#">
-                                <div className="c-menu-item__title"><span>referrals</span><i
-                                    className="no_badge purple">2</i>
+                                <div className="c-menu-item__title"><span>referrals</span>
                                 </div>
                             </a>
                             <ul>
-                                <li><a href="referrals.html"><i className="fa fa-circle"></i> my referrals </a>
-                                </li>
-                                <li>
-                                    <a href="banners.html"> <i className="fa fa-circle"></i>promotionals banners</a>
-                                </li>
-                                <li>
-                                    <a href="referral_earnings.html"> <i className="fa fa-circle"></i>referral earnings</a>
+                                <li><Link to="/referrals"><i className="fas fa-circle"></i> my referrals</Link>
                                 </li>
                             </ul>
                         </li>
@@ -154,7 +161,7 @@ const Sidebar = () => {
                     <ul className="u-list crm_drop_second_ul">
                         <li className="crm_navi_icon">
                             <div className="c-menu__item__inner"><a><i
-                                className="flaticon-help"></i></a>
+                                className="flaticon-settings"></i></a>
                                 <ul className="crm_hover_menu">
                                     <li><a><i className="fas fa-circle"></i> settings</a>
                                     </li>
